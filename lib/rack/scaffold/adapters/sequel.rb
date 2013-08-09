@@ -37,5 +37,10 @@ module Rack::Scaffold::Adapters
       defined?(::Sequel::Plugins::Timestamps) and @klass.plugins.include?(::Sequel::Plugins::Timestamps)
     end
 
+    def relationships
+      @klass.all_association_reflections.map do |relationship|
+        { name: relationship[:name], type: relationship[:type] }
+      end
+    end
   end
 end

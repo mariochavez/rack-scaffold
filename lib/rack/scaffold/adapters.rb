@@ -76,6 +76,10 @@ module Rack
         def update_timestamp_field
           raise NotImplementedError
         end
+
+        def relationships
+          raise NotImplementedError
+        end
       end
     end
   end

@@ -38,6 +38,7 @@ module Rack
 
       @actions = (options[:only] || ACTIONS) - (options[:except] || [])
 
+      puts "**** #{Rack::Scaffold.adapters.inspect}"
       @adapter = Rack::Scaffold.adapters.detect{|adapter| adapter === options[:model]}
       raise "No suitable adapters found for #{options[:model]} in #{Rack::Scaffold.adapters}" unless @adapter
 
@@ -115,15 +116,15 @@ module Rack
           end
         end if @actions.include?(:destroy)
 
-        # @app.instance_eval do
-        #   entity.relationships.each do |relationship|
-        #     next unless relationship.to_many?
+        @app.instance_eval do
+          resource.relationships.each do |relationship|
+            next if relationship[:type] == :many_to_one
 
-        #     get "/#{resource.plural}/:id/#{relationship.name}/?" do
-        #       {relationship.name => resource[params[:id]].send(relationship.name)}.to_json
-        #     end
-        #   end
-        # end
+            get "/#{resource.plural}/:id/#{relationship[:name]}/?" do
+              {relationship[:name] => resource[params[:id]].send(relationship[:name])}.to_json
+            end
+          end
+        end
       end
     end
 

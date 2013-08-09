@@ -44,15 +44,16 @@ module Rack::Scaffold::Adapters
           "/#{self.class.table_name}/#{self[primary_key]}"
         end
 
-        # entity.relationships.each do |relationship|
-        #   options = {:class => Rack::Scaffold::Models.const_get(relationship.destination.capitalize)}
+        entity.relationships.each do |relationship|
+          options = { :class => "Rack::Scaffold::Adapters::CoreData::#{relationship.destination.capitalize}" }
 
-        #   if relationship.to_many?
-        #     one_to_many relationship.name.to_sym, options
-        #   else
-        #     many_to_one relationship.name.to_sym, options
-        #   end
-        # end
+          if relationship.to_many?
+            options[:key] = "#{entity.name.downcase}_id".to_sym
+            one_to_many relationship.name.to_sym, options
+          else
+            many_to_one relationship.name.to_sym, options
+          end
+        end
 
         set_schema do
           primary_key :id
