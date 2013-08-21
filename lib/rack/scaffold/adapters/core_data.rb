@@ -77,6 +77,7 @@ module Rack::Scaffold::Adapters
                    when "Date" then :timestamp
                    when "Boolean" then :boolean
                    when "Binary" then :bytea
+                   when "String" && attribute.maximum_value >= 255 then :text
                    else :varchar
                    end
 
