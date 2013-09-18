@@ -81,6 +81,7 @@ module Rack::Scaffold::Adapters
                    else :varchar
                    end
 
+            puts "##>> #{type}: #{attribute.inspect}" if attribute.name.to_sym == :abstract
             column attribute.name.to_sym, type, options
           end
 
